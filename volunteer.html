@@ -130,8 +130,8 @@
     <label data-i18n="lblContactId">LINE ID 或 WhatsApp 號碼</label>
     <input type="text" id="contactId" data-i18n-ph="phContactId" placeholder="方便聯繫的帳號或號碼">
 
-    <label>Email</label>
-    <input type="email" id="email" placeholder="name@example.com">
+    <label>Email <span style="color:#B4483B;">*</span></label>
+    <input type="email" id="email" placeholder="name@example.com" required>
 
     <label data-i18n="lblInstagram">Instagram 帳號</label>
     <input type="text" id="instagram" placeholder="@yourname">
@@ -241,7 +241,7 @@ const I18N = {
     lblWeekendGrid: "週末可授課時段（9:00–21:00）",
     availNote2: "勾選你方便的小時段；如果那天完全沒空，勾右邊「不可」就好",
     secOther: "其他", lblQuestions: "有什麼問題或想告訴我們的嗎？", phQuestions: "選填",
-    errorMsg: "請至少填寫英文名字、聯絡方式，並在平日或週末表格裡選一個時段（或勾不可）",
+    errorMsg: "請填寫英文名字、Email，並在平日或週末表格裡選一個時段（或勾不可）",
     submitBtn: "送出登記",
     successTitle: "登記成功！",
     successBody: "感謝你的登記，我們會審核你的資料，審核通過後會透過你留下的聯絡方式通知你上架時段。",
@@ -263,7 +263,7 @@ const I18N = {
     lblWeekendGrid: "Weekend availability (9:00–21:00)",
     availNote2: "Check every hour that works for you. If you're not free at all that day, check \"N/A\" on the right instead.",
     secOther: "Anything else", lblQuestions: "Any questions or feedback?", phQuestions: "Optional",
-    errorMsg: "Please fill in at least your English name, a contact method, and select at least one slot (or N/A) in the availability tables",
+    errorMsg: "Please fill in your English name, email, and select at least one slot (or N/A) in the availability tables",
     submitBtn: "Submit application",
     successTitle: "Application submitted!",
     successBody: "Thanks for applying. We'll review your info and reach out using your contact details once it's approved.",
@@ -310,7 +310,7 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
   const anyWeekday = hasAnySelection('weekdayGrid');
   const anyWeekend = hasAnySelection('weekendGrid');
 
-  if(!englishName || (!contactId && !email) || (!anyWeekday && !anyWeekend)){
+  if(!englishName || !email || (!anyWeekday && !anyWeekend)){
     document.getElementById('errorMsg').style.display = 'block';
     return;
   }
@@ -318,6 +318,7 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
 
   const fields = {
     action: 'volunteerApply',
+    lang: currentLang,
     englishName,
     gradeYear: document.getElementById('gradeYear').value.trim(),
     location: document.getElementById('location').value.trim(),
