@@ -291,6 +291,7 @@ const I18N = {
     lblSchool: "學校名稱", phSchool: "例如 中山國小",
     lblLine: "家長 LINE ID", phLine: "LINE ID",
     lblPhone: "家長聯絡電話", phPhone: "例如 0912345678",
+    lblEmail: "家長 Email", phEmail: "name@example.com",
     modalError: "請完整填寫所有欄位",
     cancel: "取消", confirm: "確認報名",
     successTitle: "報名成功！",
@@ -310,6 +311,7 @@ const I18N = {
     lblSchool: "School name", phSchool: "e.g. Zhongshan Elementary",
     lblLine: "Parent's LINE ID", phLine: "LINE ID",
     lblPhone: "Parent's phone number", phPhone: "e.g. 0912345678",
+    lblEmail: "Parent's email", phEmail: "name@example.com",
     modalError: "Please fill in every field",
     cancel: "Cancel", confirm: "Confirm sign-up",
     successTitle: "Signed up!",
@@ -368,7 +370,7 @@ let TEACHERS = SEED_TEACHERS;
 let liveCounts = null;
 let activeDay = null;
 let pendingTeacher = null;
-const isAdmin = new URLSearchParams(window.location.search).get('admin') === '12WCWS12wcws12';
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === 'SP1212';
 
 function daysWithSlots(){
   const present = new Set(TEACHERS.map(t=>t.day));
@@ -477,6 +479,9 @@ function openModal(teacherId){
     <label>${t9.lblLine}</label>
     <input type="text" id="f_line" placeholder="${t9.phLine}">
 
+    <label>${t9.lblEmail}</label>
+    <input type="text" id="f_email" placeholder="${t9.phEmail}">
+
     <label>${t9.lblPhone}</label>
     <input type="text" id="f_phone" placeholder="${t9.phPhone}">
 
@@ -501,9 +506,10 @@ function confirmSignup(){
   const grade  = document.getElementById('f_grade').value;
   const school = document.getElementById('f_school').value.trim();
   const line   = document.getElementById('f_line').value.trim();
+  const email  = document.getElementById('f_email').value.trim();
   const phone  = document.getElementById('f_phone').value.trim();
 
-  if(!cname || !ename || !grade || !school || !line || !phone){
+  if(!cname || !ename || !grade || !school || !line || !email || !phone){
     document.getElementById('modalError').style.display = 'block';
     return;
   }
@@ -524,8 +530,10 @@ function confirmSignup(){
     grade: grade,
     school: school,
     lineId: line,
+    email: email,
     phone: phone,
     timeslot: timeslotLabel,
+    lang: currentLang,
   };
   Object.entries(fields).forEach(([name, value])=>{
     const input = document.createElement('input');
@@ -666,8 +674,8 @@ async function loadPendingVolunteers(){
         <div class="vrow"><b>教學經驗</b>：${escapeHtml(v.teachingExperience)}　<b>會說中文</b>：${escapeHtml(v.speaksChinese)}</div>
         <div class="vrow"><b>聯繫方式</b>：${escapeHtml(v.contactPref)}　${escapeHtml(v.contactId)}　${escapeHtml(v.email)}</div>
         <div class="vrow"><b>Instagram</b>：${escapeHtml(v.instagram)}　<b>每週想教</b>：${escapeHtml(String(v.classesPerWeek))} 堂</div>
-        <div class="vrow"><b>平日可授課</b>：${escapeHtml(v.weekdayDays)}　${escapeHtml(v.weekdayTime)}</div>
-        <div class="vrow"><b>週末可授課</b>：${escapeHtml(v.weekendDays)}　${escapeHtml(v.weekendTime)}</div>
+        <div class="vrow"><b>平日可授課</b>：${escapeHtml(v.weekdayAvailability) || '（未填）'}</div>
+        <div class="vrow"><b>週末可授課</b>：${escapeHtml(v.weekendAvailability) || '（未填）'}</div>
         ${v.questions ? `<div class="vrow"><b>問題/回饋</b>：${escapeHtml(v.questions)}</div>` : ''}
         <div class="vactions">
           <button class="btn-done" data-id="${v.id}">標記已處理</button>
