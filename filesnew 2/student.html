@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Up 台灣全英文口說課程｜配對報名</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #FAF6EE;
+    --board: #ffffff;
+    --ink: #1F2B24;
+    --ink-soft: #5B6960;
+    --teal: #14685A;
+    --teal-deep: #0D4A40;
+    --lime: #A9CB3B;
+    --coral: #F2764B;
+    --line: #E4DCC8;
+    --slot-open-bg: #F3F8EC;
+    --slot-full-bg: #F3F1EA;
+    --shadow: 0 10px 30px -14px rgba(20,104,90,0.28);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(169,203,59,0.10), transparent 40%),
+      radial-gradient(circle at 90% 0%, rgba(20,104,90,0.08), transparent 45%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans TC', sans-serif;
+    padding: 28px 16px 60px;
+    min-height:100vh;
+  }
+  .wrap{max-width:960px;margin:0 auto;}
+
+  .top-row{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .lang-toggle{ display:flex; gap:4px; background:#EFE9D8; border-radius:100px; padding:3px; }
+  .lang-toggle button{
+    border:none; background:transparent; font-family:'JetBrains Mono',monospace;
+    font-size:11.5px; font-weight:700; padding:6px 12px; border-radius:100px; cursor:pointer; color:var(--ink-soft);
+  }
+  .lang-toggle button.active{ background:var(--teal-deep); color:#fff; }
+
+  .header{ margin-bottom:22px; }
+  .brand-eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:0.14em; text-transform:uppercase;
+    font-size:11px; color:var(--teal); font-weight:600;
+    display:flex; align-items:center; gap:8px;
+  }
+  .brand-eyebrow::before{
+    content:""; width:8px; height:8px; background:var(--lime); border-radius:2px; display:inline-block;
+  }
+  h1{
+    font-family:'Noto Serif TC', serif;
+    font-weight:900;
+    font-size: clamp(26px, 4.5vw, 38px);
+    margin: 6px 0 4px;
+    color:var(--teal-deep);
+    line-height:1.15;
+  }
+  .subtitle{color:var(--ink-soft); font-size:14.5px; max-width:620px; line-height:1.6;}
+
+  .tabs{
+    display:flex; gap:6px; margin-bottom:18px; overflow-x:auto;
+    padding-bottom:2px;
+  }
+  .tab{
+    font-family:'Noto Serif TC', serif; font-weight:700;
+    font-size:15px; padding:10px 18px; border-radius:14px 14px 0 0;
+    background:#EFE9D8; color:var(--ink-soft); border:none; cursor:pointer;
+    position:relative; top:1px; white-space:nowrap;
+    transition: all .15s ease;
+  }
+  .tab .count{
+    font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:600;
+    margin-left:6px; opacity:.65;
+  }
+  .tab.active{ background:var(--board); color:var(--teal-deep); box-shadow: 0 -2px 0 var(--lime) inset; }
+
+  .board{
+    background:var(--board); border-radius:4px 16px 16px 16px;
+    box-shadow:var(--shadow);
+    padding: 22px;
+    min-height: 260px;
+  }
+
+  .time-group{ margin-bottom: 26px; }
+  .time-group:last-child{margin-bottom:0;}
+  .time-label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px; font-weight:700; color:var(--teal);
+    display:flex; align-items:center; gap:10px; margin-bottom:12px;
+  }
+  .time-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  .slot-grid{
+    display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:12px;
+  }
+  .slot-card{
+    border-radius:12px; padding:14px 16px; border:1px solid var(--line);
+    background:var(--slot-open-bg);
+    display:flex; flex-direction:column; gap:8px;
+    transition: transform .12s ease, box-shadow .12s ease;
+  }
+  .slot-card.full{ background:var(--slot-full-bg); }
+  .slot-card:hover{ transform: translateY(-2px); box-shadow: 0 8px 18px -10px rgba(20,104,90,0.3); }
+  .slot-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+  .teacher-name{ font-weight:700; font-size:16px; color:var(--ink); }
+  .status-pill{
+    font-size:10.5px; font-family:'JetBrains Mono', monospace; font-weight:600;
+    padding:3px 9px; border-radius:100px; white-space:nowrap;
+  }
+  .status-pill.open{ background:rgba(169,203,59,0.28); color:#4C6318; }
+  .status-pill.full{ background:rgba(31,43,36,0.08); color:var(--ink-soft); }
+
+  .signup-btn{
+    margin-top:4px; align-self:flex-start;
+    background:var(--coral); color:#fff; border:none;
+    font-weight:700; font-size:13px; padding:8px 16px;
+    border-radius:100px; cursor:pointer; transition: filter .12s ease;
+  }
+  .signup-btn:hover{ filter:brightness(1.06); }
+  .signup-btn:disabled{ background:#DCD6C4; color:#8C8672; cursor:not-allowed; }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(15,26,20,0.55); display:none;
+    align-items:center; justify-content:center; padding:20px; z-index:50; overflow-y:auto;
+  }
+  .modal-overlay.show{ display:flex; }
+  .modal{
+    background:var(--board); border-radius:18px; padding:26px; max-width:420px; width:100%;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.4); margin:auto;
+  }
+  .modal h3{ font-family:'Noto Serif TC',serif; font-size:19px; color:var(--teal-deep); margin:0 0 4px;}
+  .modal .meta{ color:var(--ink-soft); font-size:13px; margin-bottom:16px; font-family:'JetBrains Mono',monospace;}
+  .modal label{ font-size:12.5px; color:var(--ink-soft); display:block; margin:12px 0 5px; font-weight:600;}
+  .modal input, .modal select{
+    width:100%; font-family:inherit; font-size:14px; padding:10px 12px;
+    border-radius:9px; border:1px solid var(--line); background:#FCFAF3;
+  }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .modal-actions{ display:flex; gap:10px; margin-top:20px; }
+  .modal-actions button{
+    flex:1; padding:11px; border-radius:100px; border:none; font-weight:700; cursor:pointer; font-size:14px;
+  }
+  .btn-cancel{ background:#EFE9D8; color:var(--ink-soft); }
+  .btn-confirm{ background:var(--teal-deep); color:#fff; }
+  .btn-confirm:disabled{ background:#B9C4B8; cursor:not-allowed; }
+  .modal-error{ color:#B4483B; font-size:12.5px; margin-top:8px; display:none; }
+  .modal-success{ text-align:center; padding:10px 0; }
+  .modal-success .big{ font-size:34px; margin-bottom:8px; }
+  .modal-success p{ color:var(--ink-soft); font-size:13.5px; }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--teal-deep); color:#fff; padding:12px 22px; border-radius:100px;
+    font-size:13.5px; font-weight:600; opacity:0; pointer-events:none; transition:all .25s ease;
+    z-index:60; box-shadow:0 10px 24px -8px rgba(0,0,0,0.35); text-align:center; max-width:80vw;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .admin-panel{
+    margin-top:20px; background:var(--board); border-radius:16px; padding:20px;
+    box-shadow:var(--shadow);
+  }
+  .admin-panel h2{
+    font-family:'Noto Serif TC',serif; font-size:18px; color:var(--teal-deep); margin:0 0 12px;
+  }
+  .admin-form{ display:grid; grid-template-columns: 1.2fr 1fr 1fr 0.7fr auto; gap:8px; margin-bottom:14px;}
+  .admin-form input, .admin-form select{
+    font-family:inherit; font-size:13px; padding:9px 10px; border-radius:8px;
+    border:1px solid var(--line); background:#FCFAF3;
+  }
+  .admin-form button{
+    background:var(--teal-deep); color:#fff; border:none; border-radius:8px;
+    font-weight:700; font-size:13px; cursor:pointer; padding:9px 14px;
+  }
+  .admin-list{ font-size:13px; }
+  .admin-list .arow{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:8px 0; border-bottom:1px dashed var(--line);
+  }
+  .admin-list .arow:last-child{border-bottom:none;}
+  .arow-meta{ color:var(--ink-soft); font-family:'JetBrains Mono',monospace; font-size:11.5px; }
+  .del-btn{
+    font-size:11px; color:#B4483B; background:none; border:none; cursor:pointer;
+    text-decoration:underline; padding:0;
+  }
+  @media (max-width:640px){
+    .admin-form{ grid-template-columns: 1fr 1fr; }
+    .admin-form button{ grid-column: 1 / -1; }
+  }
+  .vcard{
+    border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:12px;
+    background:var(--slot-open-bg);
+  }
+  .vcard .vname{ font-weight:700; font-size:15px; margin-bottom:6px; }
+  .vcard .vrow{ font-size:12.5px; color:var(--ink-soft); line-height:1.8; }
+  .vcard .vrow b{ color:var(--ink); font-weight:600; }
+  .vcard .vactions{ margin-top:10px; display:flex; gap:8px; }
+  .vcard .vactions button{
+    font-size:12px; font-weight:700; border:none; padding:7px 14px; border-radius:100px; cursor:pointer;
+  }
+  .btn-done{ background:var(--teal-deep); color:#fff; }
+  .empty-note{ color:var(--ink-soft); font-size:12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top-row">
+    <a href="index.html" data-i18n="back" style="font-size:12.5px;color:var(--ink-soft);text-decoration:none;">← 回入口頁</a>
+    <div class="lang-toggle" id="langToggle">
+      <button data-lang="zh">中文</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+  <div class="header">
+    <div class="brand-eyebrow">WeCan WeShare · 公益平台協會</div>
+    <h1 data-i18n="h1">Speaking Up 台灣全英文口說課程</h1>
+    <div class="subtitle" data-i18n="subtitle">感謝大家踴躍報名第九梯次 Speaking Up 台灣全英文口說課程，此梯次共有 19 位志工，請各位家長自行評估孩子可上課的時間，點選下方時段並填寫資料，即完成報名。</div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="board" id="board"></div>
+
+  <div class="admin-panel" id="adminPanel" style="display:none;">
+    <h2>新增授課時段</h2>
+    <div class="admin-form">
+      <input type="text" id="newTeacher" placeholder="老師姓名">
+      <select id="newDay">
+        <option value="Friday">星期五</option>
+        <option value="Saturday">星期六</option>
+        <option value="Sunday">星期日</option>
+        <option value="Monday">星期一</option>
+        <option value="Tuesday">星期二</option>
+        <option value="Wednesday">星期三</option>
+        <option value="Thursday">星期四</option>
+      </select>
+      <input type="text" id="newTime" placeholder="時間，例如 18:00">
+      <input type="number" id="newCap" placeholder="名額" value="1" min="1">
+      <button id="addTeacherBtn">新增</button>
+    </div>
+    <h2>目前所有時段</h2>
+    <div class="admin-list" id="adminList"></div>
+
+    <h2 style="margin-top:28px;">志工申請審核</h2>
+    <div class="admin-list" id="volunteerList"></div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<!-- 隱藏的 iframe，讓表單能送到 Apps Script 而不用離開這一頁 -->
+<iframe name="hidden_form_target" style="display:none;"></iframe>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   設定區
+   ========================================================= */
+// 你自己的 Google Apps Script 網頁應用程式網址（/exec 結尾）
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzxDRgkHjGMg4A4BGkyqJDBpwNsK1-jqRlVY2PaanTm3GIVXtbCCXqBvfK4XYhRfmOe/exec';
+
+/* ========================================================= */
+
+const DAY_ORDER = ['Friday','Saturday','Sunday','Monday','Tuesday','Wednesday','Thursday'];
+const DAY_LABEL = { Friday:'五', Saturday:'六', Sunday:'日', Monday:'一', Tuesday:'二', Wednesday:'三', Thursday:'四' };
+const DAY_LABEL_EN = { Friday:'Fri', Saturday:'Sat', Sunday:'Sun', Monday:'Mon', Tuesday:'Tue', Wednesday:'Wed', Thursday:'Thu' };
+
+let currentLang = 'zh';
+function dayLabel(day){ return currentLang === 'zh' ? ('星期' + DAY_LABEL[day]) : DAY_LABEL_EN[day]; }
+
+const I18N = {
+  zh: {
+    back: "← 回入口頁", h1: "Speaking Up 台灣全英文口說課程",
+    subtitle: "感謝大家踴躍報名第九梯次 Speaking Up 台灣全英文口說課程，此梯次共有 19 位志工，請各位家長自行評估孩子可上課的時間，點選下方時段並填寫資料，即完成報名。",
+    open: "可報名", full: "已額滿", signupBtn: "我要報名", fullBtn: "已額滿",
+    modalTitle: "報名這個時段",
+    lblCName: "學生中文姓名", phCName: "例如 吳小明",
+    lblEName: "學生英文姓名", phEName: "例如 Jeanice",
+    lblGrade: "年級", gradeChoose: "請選擇",
+    grade1: "一年級", grade2: "二年級", grade3: "三年級", grade4: "四年級", grade5: "五年級", grade6: "六年級",
+    lblSchool: "學校名稱", phSchool: "例如 中山國小",
+    lblLine: "家長 LINE ID", phLine: "LINE ID",
+    lblPhone: "家長聯絡電話", phPhone: "例如 0912345678",
+    modalError: "請完整填寫所有欄位",
+    cancel: "取消", confirm: "確認報名",
+    successTitle: "報名成功！",
+    successBody1: "已為 ", successBody2: " 配對 ", successBody3: " 老師的課程，我們會盡快與您聯繫確認細節。",
+    done: "完成",
+    teacherSuffix: " 老師",
+  },
+  en: {
+    back: "← Back to home", h1: "Speaking Up Taiwan English Speaking Program",
+    subtitle: "Thanks for signing up for round 9 of Speaking Up Taiwan! We have 19 volunteers this round. Please pick a time your child is available and fill in their details to complete sign-up.",
+    open: "Open", full: "Full", signupBtn: "Sign up", fullBtn: "Full",
+    modalTitle: "Sign up for this slot",
+    lblCName: "Student's Chinese name", phCName: "e.g. 吳小明",
+    lblEName: "Student's English name", phEName: "e.g. Jeanice",
+    lblGrade: "Grade", gradeChoose: "Choose",
+    grade1: "Grade 1", grade2: "Grade 2", grade3: "Grade 3", grade4: "Grade 4", grade5: "Grade 5", grade6: "Grade 6",
+    lblSchool: "School name", phSchool: "e.g. Zhongshan Elementary",
+    lblLine: "Parent's LINE ID", phLine: "LINE ID",
+    lblPhone: "Parent's phone number", phPhone: "e.g. 0912345678",
+    modalError: "Please fill in every field",
+    cancel: "Cancel", confirm: "Confirm sign-up",
+    successTitle: "Signed up!",
+    successBody1: "We've matched ", successBody2: " with teacher ", successBody3: ". We'll reach out soon to confirm the details.",
+    done: "Done",
+    teacherSuffix: "",
+  }
+};
+
+function applyLang(lang){
+  currentLang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(I18N[lang][key] !== undefined) el.textContent = I18N[lang][key];
+  });
+  document.querySelectorAll('#langToggle button').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+  localStorage.setItem('speakingup_lang', lang);
+  renderTabs();
+  renderBoard();
+}
+document.querySelectorAll('#langToggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=> applyLang(btn.dataset.lang));
+});
+
+// 這是還沒接上 Sheet 前的預設課表，之後會被 Apps Script 裡「Teachers」分頁的即時資料蓋掉
+const SEED_TEACHERS = [
+  {id:'t1',  name:'Andrea',   day:'Friday',   time:'18:00', cap:1},
+  {id:'t2',  name:'Olivia',   day:'Saturday', time:'10:00', cap:1},
+  {id:'t3',  name:'Leonardo', day:'Friday',   time:'19:00', cap:1},
+  {id:'t4',  name:'Apple',    day:'Sunday',   time:'18:00', cap:1},
+  {id:'t5',  name:'Roman',    day:'Sunday',   time:'18:00', cap:1},
+  {id:'t6',  name:'Ethan',    day:'Monday',   time:'19:00', cap:1},
+  {id:'t7',  name:'Rylee',    day:'Saturday', time:'10:00', cap:1},
+  {id:'t8',  name:'Oscar',    day:'Monday',   time:'19:00', cap:1},
+  {id:'t9',  name:'Juliana',  day:'Saturday', time:'10:00', cap:1},
+  {id:'t10', name:'Oliver',   day:'Monday',   time:'19:00', cap:1},
+  {id:'t11', name:'Hannah',   day:'Monday',   time:'19:00', cap:1},
+  {id:'t12', name:'Jessica',  day:'Saturday', time:'10:00', cap:1},
+  {id:'t13', name:'Kevin',    day:'Saturday', time:'10:00', cap:1},
+  {id:'t14', name:'Lacey',    day:'Saturday', time:'10:00', cap:1},
+  {id:'t15', name:'Ryan',     day:'Monday',   time:'19:00', cap:1},
+  {id:'t16', name:'Kelsey',   day:'Friday',   time:'18:00', cap:1},
+  {id:'t17', name:'Chloe',    day:'Friday',   time:'18:00', cap:1},
+  {id:'t18', name:'Carrie',   day:'Saturday', time:'10:00', cap:1},
+  {id:'t19', name:'Kenneth',  day:'Saturday', time:'10:00', cap:1},
+];
+
+const KNOWN_SIGNUPS = {
+  t2:1, t3:1, t5:1, t6:1, t9:1, t11:1, t12:1, t13:1, t16:1, t18:1,
+};
+
+let TEACHERS = SEED_TEACHERS;
+let liveCounts = null;
+let activeDay = null;
+let pendingTeacher = null;
+const isAdmin = new URLSearchParams(window.location.search).get('admin') === '12WCWS12wcws12';
+
+function daysWithSlots(){
+  const present = new Set(TEACHERS.map(t=>t.day));
+  return DAY_ORDER.filter(d=>present.has(d));
+}
+
+function countFor(teacherId){
+  if(liveCounts && liveCounts[teacherId] !== undefined) return liveCounts[teacherId];
+  return KNOWN_SIGNUPS[teacherId] || 0;
+}
+
+function renderTabs(){
+  const tabs = document.getElementById('tabs');
+  const days = daysWithSlots();
+  if(!activeDay) activeDay = days[0];
+  tabs.innerHTML = days.map(d=>{
+    const count = TEACHERS.filter(t=>t.day===d).length;
+    return `<button class="tab ${d===activeDay?'active':''}" data-day="${d}">${dayLabel(d)}<span class="count">${count}</span></button>`;
+  }).join('');
+  tabs.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeDay = btn.dataset.day; renderBoard(); renderTabs(); });
+  });
+}
+
+function escapeHtml(str){
+  return (str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function renderBoard(){
+  const board = document.getElementById('board');
+  const t9 = I18N[currentLang];
+  const dayTeachers = TEACHERS.filter(t=>t.day===activeDay);
+  const times = [...new Set(dayTeachers.map(t=>t.time))].sort();
+
+  board.innerHTML = times.map(time=>{
+    const group = dayTeachers.filter(t=>t.time===time);
+    const cards = group.map(t=>{
+      const count = countFor(t.id);
+      const cap = t.cap || 1;
+      const full = count >= cap;
+      return `
+        <div class="slot-card ${full?'full':''}">
+          <div class="slot-top">
+            <div class="teacher-name">${escapeHtml(t.name)}${t9.teacherSuffix}</div>
+            <div class="status-pill ${full?'full':'open'}">${full?t9.full:t9.open}</div>
+          </div>
+          <button class="signup-btn" data-id="${t.id}" ${full?'disabled':''}>${full?t9.fullBtn:t9.signupBtn}</button>
+        </div>`;
+    }).join('');
+    return `
+      <div class="time-group">
+        <div class="time-label">${time}</div>
+        <div class="slot-grid">${cards}</div>
+      </div>`;
+  }).join('');
+
+  board.querySelectorAll('.signup-btn:not(:disabled)').forEach(btn=>{
+    btn.addEventListener('click', ()=> openModal(btn.dataset.id));
+  });
+}
+
+function showToast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(()=> el.classList.remove('show'), 2600);
+}
+
+function openModal(teacherId){
+  pendingTeacher = TEACHERS.find(t=>t.id===teacherId);
+  const t9 = I18N[currentLang];
+  document.getElementById('modalBody').innerHTML = `
+    <h3>${t9.modalTitle}</h3>
+    <div class="meta">${pendingTeacher.name}${t9.teacherSuffix} ・ ${dayLabel(pendingTeacher.day)} ${pendingTeacher.time}</div>
+
+    <div class="field-row">
+      <div>
+        <label>${t9.lblCName}</label>
+        <input type="text" id="f_cname" placeholder="${t9.phCName}">
+      </div>
+      <div>
+        <label>${t9.lblEName}</label>
+        <input type="text" id="f_ename" placeholder="${t9.phEName}">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div>
+        <label>${t9.lblGrade}</label>
+        <select id="f_grade">
+          <option value="">${t9.gradeChoose}</option>
+          <option value="1">${t9.grade1}</option>
+          <option value="2">${t9.grade2}</option>
+          <option value="3">${t9.grade3}</option>
+          <option value="4">${t9.grade4}</option>
+          <option value="5">${t9.grade5}</option>
+          <option value="6">${t9.grade6}</option>
+        </select>
+      </div>
+      <div>
+        <label>${t9.lblSchool}</label>
+        <input type="text" id="f_school" placeholder="${t9.phSchool}">
+      </div>
+    </div>
+
+    <label>${t9.lblLine}</label>
+    <input type="text" id="f_line" placeholder="${t9.phLine}">
+
+    <label>${t9.lblPhone}</label>
+    <input type="text" id="f_phone" placeholder="${t9.phPhone}">
+
+    <div class="modal-error" id="modalError">${t9.modalError}</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modalCancel">${t9.cancel}</button>
+      <button class="btn-confirm" id="modalConfirm">${t9.confirm}</button>
+    </div>`;
+  document.getElementById('modalCancel').addEventListener('click', closeModal);
+  document.getElementById('modalConfirm').addEventListener('click', confirmSignup);
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('show');
+  pendingTeacher = null;
+}
+
+function confirmSignup(){
+  const cname  = document.getElementById('f_cname').value.trim();
+  const ename  = document.getElementById('f_ename').value.trim();
+  const grade  = document.getElementById('f_grade').value;
+  const school = document.getElementById('f_school').value.trim();
+  const line   = document.getElementById('f_line').value.trim();
+  const phone  = document.getElementById('f_phone').value.trim();
+
+  if(!cname || !ename || !grade || !school || !line || !phone){
+    document.getElementById('modalError').style.display = 'block';
+    return;
+  }
+
+  // 送到後台一律用中文（不管家長選哪個語言），方便你在 Sheet 裡統一閱讀
+  const timeslotLabel = `${pendingTeacher.name} 老師・星期${DAY_LABEL[pendingTeacher.day]} ${pendingTeacher.time}`;
+
+  // 用一個真的 <form> POST 到隱藏的 iframe，送去我們自己的 Apps Script，
+  // 這樣不會離開這一頁，也不會被跨網域限制擋掉
+  const form = document.createElement('form');
+  form.action = APPS_SCRIPT_URL;
+  form.method = 'POST';
+  form.target = 'hidden_form_target';
+
+  const fields = {
+    chineseName: cname,
+    englishName: ename,
+    grade: grade,
+    school: school,
+    lineId: line,
+    phone: phone,
+    timeslot: timeslotLabel,
+  };
+  Object.entries(fields).forEach(([name, value])=>{
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = name; input.value = value;
+    form.appendChild(input);
+  });
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  if(!liveCounts) liveCounts = {};
+  liveCounts[pendingTeacher.id] = countFor(pendingTeacher.id) + 1;
+
+  const t9 = I18N[currentLang];
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-success">
+      <div class="big">🎉</div>
+      <h3>${t9.successTitle}</h3>
+      <p>${t9.successBody1}${escapeHtml(ename)}${t9.successBody2}${escapeHtml(pendingTeacher.name)}${t9.successBody3}</p>
+      <div class="modal-actions" style="margin-top:20px;">
+        <button class="btn-confirm" style="flex:1;" id="modalDone">${t9.done}</button>
+      </div>
+    </div>`;
+  document.getElementById('modalDone').addEventListener('click', ()=>{ closeModal(); renderBoard(); });
+}
+
+document.getElementById('modalOverlay').addEventListener('click', (e)=>{ if(e.target.id==='modalOverlay') closeModal(); });
+
+async function loadLiveCounts(){
+  if(!APPS_SCRIPT_URL) return;
+  try{
+    const res = await fetch(APPS_SCRIPT_URL);
+    const rows = await res.json();
+    const counts = {};
+    rows.forEach(r=>{
+      const label = (r.timeslot||'').trim();
+      const t = TEACHERS.find(t => label.includes(t.name));
+      if(t) counts[t.id] = (counts[t.id]||0) + 1;
+    });
+    liveCounts = counts;
+    renderBoard();
+  }catch(e){
+    console.warn('讀取即時報名狀況失敗，改用預設資料', e);
+  }
+}
+
+async function loadTeachers(){
+  if(!APPS_SCRIPT_URL) return;
+  try{
+    const res = await fetch(APPS_SCRIPT_URL + '?type=teachers');
+    const rows = await res.json();
+    const valid = (rows||[]).filter(r => r && r.name && r.day && r.time);
+    if(valid.length){
+      TEACHERS = valid.map(r => ({...r, cap: Number(r.cap)||1}));
+      renderTabs();
+      renderBoard();
+      if(isAdmin) renderAdminList();
+    }
+    // 如果 Sheet 裡沒有有效資料，就保留目前畫面上的預設課表，不清空
+  }catch(e){
+    console.warn('讀取志工課表失敗，改用預設課表', e);
+  }
+}
+
+// ---- 管理模式（只有網址帶 ?admin=wcws9 才會顯示）----
+function renderAdminList(){
+  const el = document.getElementById('adminList');
+  if(!el) return;
+  if(!TEACHERS.length){ el.innerHTML = '<div class="arow-meta">目前沒有時段</div>'; return; }
+  const sorted = [...TEACHERS].sort((a,b)=> DAY_ORDER.indexOf(a.day)-DAY_ORDER.indexOf(b.day) || a.time.localeCompare(b.time));
+  el.innerHTML = sorted.map(t=>{
+    const count = countFor(t.id);
+    return `<div class="arow">
+      <div>${escapeHtml(t.name)} 老師 <span class="arow-meta">星期${DAY_LABEL[t.day]} ${t.time} ・ ${count}/${t.cap||1}</span></div>
+      <button class="del-btn" data-id="${t.id}">刪除</button>
+    </div>`;
+  }).join('');
+  el.querySelectorAll('.del-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=> deleteTeacher(btn.dataset.id));
+  });
+}
+
+function postToScript(fields){
+  return new Promise((resolve)=>{
+    const form = document.createElement('form');
+    form.action = APPS_SCRIPT_URL;
+    form.method = 'POST';
+    form.target = 'hidden_form_target'; // 用跟報名表單同一個常駐 iframe，避免時序問題
+    Object.entries(fields).forEach(([name, value])=>{
+      const input = document.createElement('input');
+      input.type = 'hidden'; input.name = name; input.value = value;
+      form.appendChild(input);
+    });
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+    // 固定等待，確保 Apps Script 真的處理完再繼續（不依賴不可靠的 iframe load 事件）
+    setTimeout(resolve, 1200);
+  });
+}
+
+async function addTeacher(){
+  const name = document.getElementById('newTeacher').value.trim();
+  const day = document.getElementById('newDay').value;
+  const time = document.getElementById('newTime').value.trim();
+  const cap = parseInt(document.getElementById('newCap').value) || 1;
+  if(!name || !time){ showToast('請填寫老師姓名與時間'); return; }
+
+  await postToScript({ action:'addTeacher', name, day, time, cap });
+  document.getElementById('newTeacher').value = '';
+  document.getElementById('newTime').value = '';
+  document.getElementById('newCap').value = 1;
+  showToast(`已新增 ${name} 老師的時段`);
+  await loadTeachers();
+}
+
+async function deleteTeacher(id){
+  await postToScript({ action:'deleteTeacher', id });
+  showToast('已刪除該時段');
+  await loadTeachers();
+}
+
+async function loadPendingVolunteers(){
+  const el = document.getElementById('volunteerList');
+  if(!el || !APPS_SCRIPT_URL) return;
+  try{
+    const res = await fetch(APPS_SCRIPT_URL + '?type=volunteers_pending');
+    const rows = await res.json();
+    if(!rows.length){
+      el.innerHTML = '<div class="empty-note">目前沒有待審核的志工申請</div>';
+      return;
+    }
+    el.innerHTML = rows.map(v => `
+      <div class="vcard">
+        <div class="vname">${escapeHtml(v.englishName)}</div>
+        <div class="vrow"><b>年級/學制</b>：${escapeHtml(v.gradeYear)}　<b>所在地</b>：${escapeHtml(v.location)}</div>
+        <div class="vrow"><b>教學經驗</b>：${escapeHtml(v.teachingExperience)}　<b>會說中文</b>：${escapeHtml(v.speaksChinese)}</div>
+        <div class="vrow"><b>聯繫方式</b>：${escapeHtml(v.contactPref)}　${escapeHtml(v.contactId)}　${escapeHtml(v.email)}</div>
+        <div class="vrow"><b>Instagram</b>：${escapeHtml(v.instagram)}　<b>每週想教</b>：${escapeHtml(String(v.classesPerWeek))} 堂</div>
+        <div class="vrow"><b>平日可授課</b>：${escapeHtml(v.weekdayDays)}　${escapeHtml(v.weekdayTime)}</div>
+        <div class="vrow"><b>週末可授課</b>：${escapeHtml(v.weekendDays)}　${escapeHtml(v.weekendTime)}</div>
+        ${v.questions ? `<div class="vrow"><b>問題/回饋</b>：${escapeHtml(v.questions)}</div>` : ''}
+        <div class="vactions">
+          <button class="btn-done" data-id="${v.id}">標記已處理</button>
+        </div>
+      </div>`).join('');
+    el.querySelectorAll('.btn-done').forEach(btn=>{
+      btn.addEventListener('click', async ()=>{
+        await postToScript({ action:'markVolunteerProcessed', id: btn.dataset.id });
+        showToast('已標記為處理完成');
+        loadPendingVolunteers();
+      });
+    });
+  }catch(e){
+    console.warn('讀取志工申請失敗', e);
+    el.innerHTML = '<div class="empty-note">讀取失敗，稍後重新整理再試</div>';
+  }
+}
+
+if(isAdmin){
+  const panel = document.getElementById('adminPanel');
+  if(panel) panel.style.display = 'block';
+  const addBtn = document.getElementById('addTeacherBtn');
+  if(addBtn) addBtn.addEventListener('click', addTeacher);
+  loadPendingVolunteers();
+}
+
+applyLang(localStorage.getItem('speakingup_lang') || 'zh');
+loadTeachers();
+loadLiveCounts();
+</script>
+</body>
+</html>
