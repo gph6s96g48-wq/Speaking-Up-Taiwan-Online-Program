@@ -99,7 +99,7 @@
 
     <div class="row2">
       <div>
-        <label data-i18n="lblGradeYear">年級 / 學制</label>
+        <label data-i18n="lblGradeYear">年級</label>
         <input type="text" id="gradeYear" data-i18n-ph="phGradeYear" placeholder="例如 大二">
       </div>
       <div>
@@ -107,6 +107,9 @@
         <input type="text" id="location" data-i18n-ph="phLocation" placeholder="例如 台灣台北">
       </div>
     </div>
+
+    <label data-i18n="lblSchool">就讀學校</label>
+    <input type="text" id="school" data-i18n-ph="phSchool" placeholder="例如 台灣大學">
 
     <label data-i18n="lblTeachExp">是否有教學經驗？<span class="hint" data-i18n="hintNoAffect">（不影響錄取率）</span></label>
     <div class="radio-group">
@@ -134,11 +137,12 @@
     <input type="email" id="email" placeholder="name@example.com" required>
 
     <label data-i18n="lblInstagram">Instagram 帳號</label>
-    <input type="text" id="instagram" placeholder="@yourname">
+    <input type="text" id="instagram" data-i18n-ph="phInstagram" placeholder="沒有請填 N/A">
 
     <div class="section-title" data-i18n="secAvail">授課意願</div>
     <label data-i18n="lblClassesPerWeek">一週想教幾堂課？</label>
     <input type="number" id="classesPerWeek" min="1" data-i18n-ph="phClassesPerWeek" placeholder="例如 1">
+    <div class="avail-note" data-i18n="availHint">若只教一堂課，請在下方勾選一個可以的時間就好；若想教兩堂課，請勾選兩個可以的時間，以此類推。</div>
 
     <label data-i18n="lblWeekdayGrid">平日晚上可授課時段（17:00–21:00）</label>
     <div class="avail-note" data-i18n="availNote">勾選你方便的小時段；如果那天完全沒空，勾右邊「不可」就好</div>
@@ -228,20 +232,22 @@ const I18N = {
     back: "← 回入口頁", h1: "志工老師登記",
     subtitle: "感謝你願意加入 Speaking Up 台灣全英文口說課程！請完整填寫以下資料，我們審核後會透過你留下的聯絡方式通知你。",
     secBasic: "基本資料", lblEnglishName: "英文名字", phEnglishName: "例如 Andrea",
-    lblGradeYear: "年級 / 學制", phGradeYear: "例如 大二",
+    lblGradeYear: "年級", phGradeYear: "例如 大二",
     lblLocation: "所在國家或縣市", phLocation: "例如 台灣台北",
+    lblSchool: "就讀學校", phSchool: "例如 台灣大學",
     lblTeachExp: "是否有教學經驗？", hintNoAffect: "（不影響錄取率）", yes:"有", no:"沒有",
     lblSpeaksChinese: "是否會說中文？", hintNoAffect2: "（不影響錄取率）", yes2:"會", no2:"不會",
-    secContact: "聯絡方式", lblContactPref: "偏好聯繫方式",
+    secContact: "聯絡方式", lblContactPref: "偏好聯繫方式（可複選）",
     lblContactId: "LINE ID 或 WhatsApp 號碼", phContactId: "方便聯繫的帳號或號碼",
-    lblInstagram: "Instagram 帳號",
+    lblInstagram: "Instagram 帳號", phInstagram: "沒有請填 N/A",
     secAvail: "授課意願", lblClassesPerWeek: "一週想教幾堂課？", phClassesPerWeek: "例如 1",
+    availHint: "若只教一堂課，請在下方勾選一個可以的時間就好；若想教兩堂課，請勾選兩個可以的時間，以此類推。",
     lblWeekdayGrid: "平日晚上可授課時段（17:00–21:00）",
     availNote: "勾選你方便的小時段；如果那天完全沒空，勾右邊「不可」就好",
     lblWeekendGrid: "週末可授課時段（9:00–21:00）",
     availNote2: "勾選你方便的小時段；如果那天完全沒空，勾右邊「不可」就好",
     secOther: "其他", lblQuestions: "有什麼問題或想告訴我們的嗎？", phQuestions: "選填",
-    errorMsg: "請填寫英文名字、Email，並在平日或週末表格裡選一個時段（或勾不可）",
+    errorMsg: "除了「其他/問題」以外，其餘欄位都必填，請確認都已填寫並至少選一個可授課時段",
     submitBtn: "送出登記",
     successTitle: "登記成功！",
     successBody: "感謝你的登記，我們會審核你的資料，審核通過後會透過你留下的聯絡方式通知你上架時段。",
@@ -250,20 +256,22 @@ const I18N = {
     back: "← Back to home", h1: "Volunteer teacher sign-up",
     subtitle: "Thanks for joining Speaking Up Taiwan! Please fill in the details below — we'll review your application and reach out using the contact info you provide.",
     secBasic: "Basic info", lblEnglishName: "English name", phEnglishName: "e.g. Andrea",
-    lblGradeYear: "Grade / year of study", phGradeYear: "e.g. Sophomore",
+    lblGradeYear: "Grade", phGradeYear: "e.g. Sophomore",
     lblLocation: "Country or city you're based in", phLocation: "e.g. Taipei, Taiwan",
+    lblSchool: "School", phSchool: "e.g. National Taiwan University",
     lblTeachExp: "Do you have teaching experience?", hintNoAffect: "(does not affect your acceptance)", yes:"Yes", no:"No",
     lblSpeaksChinese: "Do you speak Chinese?", hintNoAffect2: "(does not affect your acceptance)", yes2:"Yes", no2:"No",
-    secContact: "Contact info", lblContactPref: "Preferred contact method",
+    secContact: "Contact info", lblContactPref: "Preferred contact method (select all that apply)",
     lblContactId: "LINE ID or WhatsApp number", phContactId: "Your ID or number",
-    lblInstagram: "Instagram handle",
+    lblInstagram: "Instagram handle", phInstagram: "Enter N/A if you don't have one",
     secAvail: "Teaching availability", lblClassesPerWeek: "How many classes do you want to teach per week?", phClassesPerWeek: "e.g. 1",
+    availHint: "If you only want to teach one class, check just one time slot below. If you want to teach two classes, check two slots, and so on.",
     lblWeekdayGrid: "Weekday evening availability (17:00–21:00)",
     availNote: "Check every hour that works for you. If you're not free at all that day, check \"N/A\" on the right instead.",
     lblWeekendGrid: "Weekend availability (9:00–21:00)",
     availNote2: "Check every hour that works for you. If you're not free at all that day, check \"N/A\" on the right instead.",
     secOther: "Anything else", lblQuestions: "Any questions or feedback?", phQuestions: "Optional",
-    errorMsg: "Please fill in your English name, email, and select at least one slot (or N/A) in the availability tables",
+    errorMsg: "All fields are required except the optional questions/feedback field — please fill everything in and select at least one available time slot",
     submitBtn: "Submit application",
     successTitle: "Application submitted!",
     successBody: "Thanks for applying. We'll review your info and reach out using your contact details once it's approved.",
@@ -305,12 +313,24 @@ function getRadio(name){
 
 document.getElementById('submitBtn').addEventListener('click', ()=>{
   const englishName = document.getElementById('englishName').value.trim();
+  const gradeYear = document.getElementById('gradeYear').value.trim();
+  const location = document.getElementById('location').value.trim();
+  const school = document.getElementById('school').value.trim();
   const contactId = document.getElementById('contactId').value.trim();
   const email = document.getElementById('email').value.trim();
+  const instagram = document.getElementById('instagram').value.trim();
+  const classesPerWeek = document.getElementById('classesPerWeek').value;
+  const teachingExperience = getRadio('teachingExperience');
+  const speaksChinese = getRadio('speaksChinese');
+  const contactPref = getChecked('contactPref');
   const anyWeekday = hasAnySelection('weekdayGrid');
   const anyWeekend = hasAnySelection('weekendGrid');
 
-  if(!englishName || !email || (!anyWeekday && !anyWeekend)){
+  const allRequiredFilled = englishName && gradeYear && location && school &&
+    teachingExperience && speaksChinese && contactPref.length > 0 &&
+    contactId && email && instagram && classesPerWeek && (anyWeekday || anyWeekend);
+
+  if(!allRequiredFilled){
     document.getElementById('errorMsg').style.display = 'block';
     return;
   }
@@ -320,15 +340,16 @@ document.getElementById('submitBtn').addEventListener('click', ()=>{
     action: 'volunteerApply',
     lang: currentLang,
     englishName,
-    gradeYear: document.getElementById('gradeYear').value.trim(),
-    location: document.getElementById('location').value.trim(),
-    teachingExperience: getRadio('teachingExperience'),
-    speaksChinese: getRadio('speaksChinese'),
-    contactPref: getChecked('contactPref').join('、'),
+    gradeYear,
+    location,
+    school,
+    teachingExperience,
+    speaksChinese,
+    contactPref: contactPref.join('、'),
     contactId,
     email,
-    instagram: document.getElementById('instagram').value.trim(),
-    classesPerWeek: document.getElementById('classesPerWeek').value,
+    instagram,
+    classesPerWeek,
     weekdayAvailability: collectAvailability('weekdayGrid', WEEKDAY_DAYS),
     weekendAvailability: collectAvailability('weekendGrid', WEEKEND_DAYS),
     questions: document.getElementById('questions').value.trim(),
