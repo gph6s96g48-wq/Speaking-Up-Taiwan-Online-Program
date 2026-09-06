@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speaking Up Taiwan Online English Program</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+  :root{
+    --bg: #FAF6EE; --board: #ffffff; --ink: #1F2B24; --ink-soft: #5B6960;
+    --blue: #3B6FE0; --blue-deep: #0F3E9E; --line: #E4DCC8;
+    --shadow: 0 10px 30px -14px rgba(15,62,158,0.28); --coral: #F2764B; --na: #B4483B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(59,111,224,0.08), transparent 40%),
+      radial-gradient(circle at 90% 0%, rgba(15,62,158,0.06), transparent 45%),
+      var(--bg);
+    color:var(--ink); font-family:'Noto Sans TC', sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:28px 16px;
+  }
+  .wrap{max-width:760px; width:100%; position:relative;}
+  .lang-toggle{
+    position:absolute; top:-8px; right:0; display:flex; gap:4px;
+    background:#EFE9D8; border-radius:100px; padding:3px; z-index:5;
+  }
+  .lang-toggle button{
+    border:none; background:transparent; font-family:'JetBrains Mono',monospace;
+    font-size:11.5px; font-weight:700; padding:6px 12px; border-radius:100px; cursor:pointer; color:var(--ink-soft);
+  }
+  .lang-toggle button.active{ background:var(--blue-deep); color:#fff; }
+
+  .panel{
+    display:flex; min-height:440px; border-radius:16px; overflow:hidden; box-shadow:var(--shadow);
+  }
+  @media (max-width:640px){ .panel{ flex-direction:column; min-height:0; } }
+  .brand-side{
+    flex:1; background:linear-gradient(135deg,#3B6FE0,#0F3E9E); padding:36px 30px;
+    display:flex; flex-direction:column; justify-content:center; color:#fff;
+  }
+  .brand-side img{ width:52px; height:52px; object-fit:contain; margin-bottom:16px; background:#fff; border-radius:12px; padding:6px; }
+  .brand-title{ font-family:'Noto Serif TC', serif; font-weight:900; font-size:20px; line-height:1.5; }
+  .brand-sub{ font-size:12px; opacity:0.85; margin-top:14px; letter-spacing:0.04em; }
+
+  .form-side{
+    flex:1.1; background:var(--board); padding:36px 30px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .step-title{ font-family:'Noto Serif TC', serif; font-weight:900; font-size:20px; color:var(--blue-deep); margin:0 0 6px; }
+  .step-sub{ font-size:13px; color:var(--ink-soft); margin:0 0 22px; line-height:1.6; }
+
+  .role-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .role-card{
+    background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:18px 14px;
+    text-align:center; cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .role-card:hover{ transform:translateY(-2px); box-shadow:0 8px 18px -12px rgba(15,62,158,0.3); }
+  .role-card .emoji{ font-size:26px; margin-bottom:8px; }
+  .role-card .label{ font-weight:700; font-size:13.5px; }
+
+  #googleBtnWrap{ display:flex; justify-content:center; margin:8px 0; }
+
+  .code-input{
+    width:100%; font-family:'JetBrains Mono',monospace; font-size:26px; letter-spacing:0.3em; text-align:center;
+    padding:14px; border-radius:12px; border:1px solid var(--line); background:var(--bg); color:var(--ink);
+  }
+  .primary-btn{
+    margin-top:14px; width:100%; background:var(--coral); color:#fff; border:none;
+    font-weight:700; font-size:15px; padding:13px; border-radius:100px; cursor:pointer;
+  }
+  .primary-btn:hover{ filter:brightness(1.05); }
+  .back-link{ font-size:12.5px; color:var(--ink-soft); text-decoration:none; display:inline-block; margin-bottom:14px; cursor:pointer; }
+
+  .warn-box{
+    margin-top:18px; border:1px solid #93AEEF; border-radius:12px; padding:14px; background:#EEF2FC;
+  }
+  .warn-box .title{ font-weight:700; font-size:12.5px; color:var(--blue-deep); margin-bottom:6px; }
+  .warn-box .body{ font-size:11.5px; color:var(--ink-soft); line-height:1.7; }
+
+  .error-msg{ color:var(--na); font-size:12.5px; margin-top:10px; display:none; }
+
+  /* Pair display */
+  .pair-card{ background:var(--board); border-radius:16px; box-shadow:var(--shadow); padding:26px 24px; margin-bottom:18px; }
+  .pair-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+  .person{ background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:16px; }
+  .person .role{ font-family:'JetBrains Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--blue); margin-bottom:6px; }
+  .person .name{ font-weight:700; font-size:17px; margin-bottom:4px; }
+  .person .grade{ font-size:13px; color:var(--ink-soft); }
+  .meeting-btn{
+    display:block; text-align:center; background:var(--coral); color:#fff; text-decoration:none;
+    font-weight:700; font-size:15px; padding:14px; border-radius:100px;
+  }
+  .no-meeting{ text-align:center; color:var(--ink-soft); font-size:13.5px; padding:14px; }
+
+  .section-title{ font-family:'Noto Serif TC',serif; font-weight:700; font-size:16px; color:var(--blue-deep); margin:0 0 12px; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  label{ font-size:12px; color:var(--ink-soft); font-weight:600; display:block; margin:12px 0 5px; }
+  label:first-of-type{ margin-top:0; }
+  input[type=text], input[type=number], input[type=date], textarea{
+    width:100%; font-family:inherit; font-size:14px; padding:10px 12px;
+    border-radius:9px; border:1px solid var(--line); background:#FCFAF3;
+  }
+  textarea{ min-height:70px; resize:vertical; }
+  .add-btn{
+    margin-top:14px; background:var(--blue-deep); color:#fff; border:none;
+    font-weight:700; font-size:13.5px; padding:10px 18px; border-radius:100px; cursor:pointer;
+  }
+  .record{ border-bottom:1px dashed var(--line); padding:14px 0; }
+  .record:last-child{ border-bottom:none; }
+  .record .when{ font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--blue-deep); font-weight:700; margin-bottom:6px; }
+  .record .durations{ font-size:12px; color:var(--ink-soft); margin-bottom:6px; }
+  .record .field-label{ font-size:12px; font-weight:700; color:var(--ink); margin-top:8px; }
+  .record .field-value{ font-size:13.5px; color:var(--ink); line-height:1.6; }
+  .empty-note{ color:var(--ink-soft); font-size:13px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-toggle" id="langToggle">
+    <button data-lang="zh">中文</button>
+    <button data-lang="en">EN</button>
+  </div>
+  <div id="app"></div>
+</div>
+
+<iframe name="hidden_form_target" style="display:none;"></iframe>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqTwKFrfpKcDn4kScjwmvhDbkcuw0blI9kgspA-9lOlPHIb0hBzEVL57To8IRJU2Pu/exec';
+const GOOGLE_CLIENT_ID = '241428760378-bvuq2iadg3793r3qjdele1hjvegf0fg3.apps.googleusercontent.com';
+
+let currentLang = 'zh';
+let selectedRole = null;
+let googleUser = null;
+let currentPair = null;
+
+const I18N = {
+  zh: {
+    title: "Speaking Up Taiwan Online English Program",
+    chooseRole: "請先選擇你的身份",
+    volRole: "我是志工老師", stuRole: "我是學生家長",
+    signInPrompt: "接下來請用 Gmail 登入",
+    back: "← 重新選擇身份",
+    lineWarnTitle: "😕 無法登入嗎？",
+    lineWarnBody: "從 LINE 點連結會用內嵌瀏覽器打開，Google 登入不支援。請點右下角選單 →「用預設瀏覽器開啟」→ 重新登入。",
+    codePrompt: "請輸入 4 位數驗證碼",
+    codePh: "0000",
+    confirmCode: "確認",
+    codeError: "找不到這組驗證碼，請確認後再試一次",
+    backToCode: "← 重新輸入驗證碼",
+    roleVolunteer: "志工老師", roleStudent: "學生",
+    meetingBtn: "加入上課連結 →",
+    noMeeting: "上課連結尚未提供，請聯繫我們確認上課方式。",
+    recordSection: "教學紀錄",
+    lblClassDate: "上課日期",
+    lblClassDuration: "上課時間（分鐘）",
+    lblPrepDuration: "備課時間（分鐘）",
+    lblTeachingNotes: "教學紀錄",
+    lblLifeCare: "生活關懷",
+    phTeachingNotes: "這次上課教了什麼、進度如何...",
+    phLifeCare: "孩子最近的生活狀況、需要留意的地方...",
+    addRecordBtn: "新增紀錄",
+    historyTitle: "歷史紀錄",
+    noRecords: "目前還沒有教學紀錄。",
+    loadFail: "讀取失敗，稍後重新整理再試。",
+  },
+  en: {
+    title: "Speaking Up Taiwan Online English Program",
+    chooseRole: "Please choose your role",
+    volRole: "I'm a volunteer teacher", stuRole: "I'm a parent / student",
+    signInPrompt: "Now sign in with Google",
+    back: "← Choose a different role",
+    lineWarnTitle: "😕 Can't sign in?",
+    lineWarnBody: "Opening this link from LINE uses an in-app browser, which Google doesn't support for sign-in. Tap the menu in the corner → \"Open in browser\" → sign in again.",
+    codePrompt: "Enter your 4-digit code",
+    codePh: "0000",
+    confirmCode: "Confirm",
+    codeError: "That code wasn't found. Please check and try again.",
+    backToCode: "← Enter a different code",
+    roleVolunteer: "Volunteer teacher", roleStudent: "Student",
+    meetingBtn: "Join class link →",
+    noMeeting: "No meeting link yet — please contact us to confirm how class will run.",
+    recordSection: "Teaching records",
+    lblClassDate: "Class date",
+    lblClassDuration: "Class time (minutes)",
+    lblPrepDuration: "Prep time (minutes)",
+    lblTeachingNotes: "Teaching notes",
+    lblLifeCare: "Wellbeing notes",
+    phTeachingNotes: "What was covered this session, progress...",
+    phLifeCare: "How the student's doing, anything to keep in mind...",
+    addRecordBtn: "Add record",
+    historyTitle: "Past records",
+    noRecords: "No teaching records yet.",
+    loadFail: "Failed to load. Please refresh and try again.",
+  }
+};
+
+function t(key){ return I18N[currentLang][key]; }
+
+function applyLangButtons(){
+  document.querySelectorAll('#langToggle button').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.lang === currentLang);
+  });
+}
+document.querySelectorAll('#langToggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    currentLang = btn.dataset.lang;
+    localStorage.setItem('speakingup_lang', currentLang);
+    applyLangButtons();
+    render();
+  });
+});
+currentLang = localStorage.getItem('speakingup_lang') || 'zh';
+
+function escapeHtml(str){
+  return String(str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function render(){
+  applyLangButtons();
+  if(!selectedRole) return renderRoleSelect();
+  if(!googleUser) return renderSignIn();
+  if(!currentPair) return renderCodeEntry();
+  return renderPair();
+}
+
+function renderRoleSelect(){
+  document.getElementById('app').innerHTML = `
+    <div class="panel">
+      <div class="brand-side">
+        <div class="brand-title">${escapeHtml(t('title'))}</div>
+        <div class="brand-sub">WeCan WeShare</div>
+      </div>
+      <div class="form-side">
+        <div class="step-title">${t('chooseRole')}</div>
+        <div class="role-grid">
+          <div class="role-card" id="roleVolBtn">
+            <div class="emoji">🧑‍🏫</div>
+            <div class="label">${t('volRole')}</div>
+          </div>
+          <div class="role-card" id="roleStuBtn">
+            <div class="emoji">🎒</div>
+            <div class="label">${t('stuRole')}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('roleVolBtn').addEventListener('click', ()=>{ selectedRole = 'volunteer'; render(); });
+  document.getElementById('roleStuBtn').addEventListener('click', ()=>{ selectedRole = 'student'; render(); });
+}
+
+function renderSignIn(){
+  document.getElementById('app').innerHTML = `
+    <div class="panel">
+      <div class="brand-side">
+        <div class="brand-title">${escapeHtml(t('title'))}</div>
+        <div class="brand-sub">WeCan WeShare</div>
+      </div>
+      <div class="form-side">
+        <span class="back-link" id="backToRole">${t('back')}</span>
+        <div class="step-title">${t('signInPrompt')}</div>
+        <div id="googleBtnWrap"></div>
+        <div class="warn-box">
+          <div class="title">${t('lineWarnTitle')}</div>
+          <div class="body">${t('lineWarnBody')}</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('backToRole').addEventListener('click', ()=>{ selectedRole = null; render(); });
+
+  if(window.google && window.google.accounts){
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: onGoogleSignIn });
+    google.accounts.id.renderButton(document.getElementById('googleBtnWrap'), { theme:'outline', size:'large', text:'signin_with', locale: currentLang==='zh' ? 'zh-TW' : 'en' });
+  }
+}
+
+function onGoogleSignIn(response){
+  try{
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    googleUser = { email: payload.email, name: payload.name };
+  }catch(e){
+    googleUser = { email: '', name: '' };
+  }
+  render();
+}
+
+function renderCodeEntry(){
+  document.getElementById('app').innerHTML = `
+    <div class="panel">
+      <div class="brand-side">
+        <div class="brand-title">${escapeHtml(t('title'))}</div>
+        <div class="brand-sub">WeCan WeShare</div>
+      </div>
+      <div class="form-side">
+        <span class="back-link" id="backToSignIn">${t('back')}</span>
+        <div class="step-title">${t('codePrompt')}</div>
+        <input type="text" class="code-input" id="codeInput" placeholder="${t('codePh')}" maxlength="4" inputmode="numeric">
+        <div class="error-msg" id="codeErrorMsg">${t('codeError')}</div>
+        <button class="primary-btn" id="confirmCodeBtn">${t('confirmCode')}</button>
+      </div>
+    </div>`;
+  document.getElementById('backToSignIn').addEventListener('click', ()=>{ googleUser = null; render(); });
+  document.getElementById('confirmCodeBtn').addEventListener('click', submitCode);
+  document.getElementById('codeInput').addEventListener('keydown', (e)=>{ if(e.key==='Enter') submitCode(); });
+}
+
+async function submitCode(){
+  const code = document.getElementById('codeInput').value.trim();
+  const errEl = document.getElementById('codeErrorMsg');
+  if(!/^\d{4}$/.test(code)){
+    errEl.style.display = 'block';
+    return;
+  }
+  try{
+    const res = await fetch(APPS_SCRIPT_URL + '?type=pair_by_code&code=' + encodeURIComponent(code) + '&_=' + Date.now(), { cache:'no-store' });
+    const pair = await res.json();
+    if(!pair || pair.error){
+      errEl.style.display = 'block';
+      return;
+    }
+    errEl.style.display = 'none';
+    currentPair = pair;
+    render();
+  }catch(e){
+    errEl.style.display = 'block';
+  }
+}
+
+function renderPair(){
+  const p = currentPair;
+  const meetingHtml = p.meetingLink
+    ? `<a class="meeting-btn" href="${escapeHtml(p.meetingLink)}" target="_blank" rel="noopener">${t('meetingBtn')}</a>`
+    : `<div class="no-meeting">${t('noMeeting')}</div>`;
+
+  document.getElementById('app').innerHTML = `
+    <span class="back-link" id="backToCode">${t('backToCode')}</span>
+    <div class="pair-card">
+      <div class="pair-grid">
+        <div class="person">
+          <div class="role">${t('roleVolunteer')}</div>
+          <div class="name">${escapeHtml(p.volunteerName)}</div>
+          <div class="grade">${escapeHtml(p.volunteerGrade)}</div>
+        </div>
+        <div class="person">
+          <div class="role">${t('roleStudent')}</div>
+          <div class="name">${escapeHtml(p.studentName)}</div>
+          <div class="grade">${escapeHtml(p.studentGrade)}</div>
+        </div>
+      </div>
+      ${meetingHtml}
+    </div>
+    ${selectedRole === 'volunteer' ? `
+    <div class="pair-card">
+      <div class="section-title">${t('recordSection')}</div>
+      <label>${t('lblClassDate')}</label>
+      <input type="date" id="f_classDate">
+      <div class="field-row">
+        <div>
+          <label>${t('lblClassDuration')}</label>
+          <input type="number" id="f_classDuration" min="0">
+        </div>
+        <div>
+          <label>${t('lblPrepDuration')}</label>
+          <input type="number" id="f_prepDuration" min="0">
+        </div>
+      </div>
+      <label>${t('lblTeachingNotes')}</label>
+      <textarea id="f_teachingNotes" placeholder="${t('phTeachingNotes')}"></textarea>
+      <label>${t('lblLifeCare')}</label>
+      <textarea id="f_lifeCare" placeholder="${t('phLifeCare')}"></textarea>
+      <button class="add-btn" id="addRecordBtn">${t('addRecordBtn')}</button>
+    </div>
+    <div class="pair-card">
+      <div class="section-title">${t('historyTitle')}</div>
+      <div id="recordsList"><div class="empty-note">...</div></div>
+    </div>` : ''}
+  `;
+
+  document.getElementById('backToCode').addEventListener('click', ()=>{ currentPair = null; render(); });
+  if(selectedRole === 'volunteer'){
+    document.getElementById('addRecordBtn').addEventListener('click', addRecord);
+    const dateInput = document.getElementById('f_classDate');
+    dateInput.value = new Date().toISOString().slice(0,10);
+    loadRecords();
+  }
+}
+
+async function loadRecords(){
+  const el = document.getElementById('recordsList');
+  try{
+    const res = await fetch(APPS_SCRIPT_URL + '?type=pair_records&id=' + encodeURIComponent(currentPair.id) + '&_=' + Date.now(), { cache:'no-store' });
+    const records = await res.json();
+    if(!records.length){
+      el.innerHTML = `<div class="empty-note">${t('noRecords')}</div>`;
+      return;
+    }
+    el.innerHTML = records.map(r => `
+      <div class="record">
+        <div class="when">${escapeHtml(r.classDate)}</div>
+        <div class="durations">${t('lblClassDuration')}: ${escapeHtml(String(r.classDuration||0))} ・ ${t('lblPrepDuration')}: ${escapeHtml(String(r.prepDuration||0))}</div>
+        ${r.teachingNotes ? `<div class="field-label">${t('lblTeachingNotes')}</div><div class="field-value">${escapeHtml(r.teachingNotes)}</div>` : ''}
+        ${r.lifeCare ? `<div class="field-label">${t('lblLifeCare')}</div><div class="field-value">${escapeHtml(r.lifeCare)}</div>` : ''}
+      </div>`).join('');
+  }catch(e){
+    el.innerHTML = `<div class="empty-note">${t('loadFail')}</div>`;
+  }
+}
+
+async function addRecord(){
+  const classDate = document.getElementById('f_classDate').value;
+  const classDuration = document.getElementById('f_classDuration').value;
+  const prepDuration = document.getElementById('f_prepDuration').value;
+  const teachingNotes = document.getElementById('f_teachingNotes').value.trim();
+  const lifeCare = document.getElementById('f_lifeCare').value.trim();
+  if(!classDate || !teachingNotes) return;
+
+  const form = document.createElement('form');
+  form.action = APPS_SCRIPT_URL;
+  form.method = 'POST';
+  form.target = 'hidden_form_target';
+  const fields = { action:'addPairRecord', id: currentPair.id, classDate, classDuration, prepDuration, teachingNotes, lifeCare };
+  Object.entries(fields).forEach(([name, value])=>{
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = name; input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  document.getElementById('f_teachingNotes').value = '';
+  document.getElementById('f_lifeCare').value = '';
+  document.getElementById('f_classDuration').value = '';
+  document.getElementById('f_prepDuration').value = '';
+  setTimeout(loadRecords, 1000);
+}
+
+render();
+</script>
+</body>
+</html>
